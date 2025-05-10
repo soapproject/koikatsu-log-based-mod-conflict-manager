@@ -15,6 +15,7 @@ type ModConflict = {
   skipped: ModEntry[];
 };
 
+// Util tools
 const formatSize = (size: number) => {
   if (size >= 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(2)} MB`;
   if (size >= 1024) return `${(size / 1024).toFixed(2)} KB`;
@@ -24,14 +25,23 @@ const formatSize = (size: number) => {
 const formatDate = (timestamp: number | null) =>
   timestamp ? new Date(timestamp * 1000).toLocaleString() : 'N/A';
 
+const isSizeDuplicate = (conflict: ModConflict, size: number) => {
+  const allSizes = [
+    conflict.loaded.size,
+    ...conflict.skipped.map(mod => mod.size),
+  ];
+  return allSizes.filter(s => s === size).length > 1;
+};
+
+// Main Parser Logic
 const useParseLog = (gamePath: string) => {
   const [results, setResults] = useState<ModConflict[]>([]);
   const [error, setError] = useState('');
 
   const parseLog = useCallback(async () => {
     setError('');
+    if (!gamePath) return;
     try {
-      if (!gamePath) return;
       const log: string = await invoke('read_log_from_path', { gamePath });
       const parsed: ModConflict[] = await invoke('parse_log', {
         log,
@@ -48,7 +58,6 @@ const useParseLog = (gamePath: string) => {
     (index: number, type: 'loaded' | 'skipped', path?: string) => {
       setResults(prev => {
         const updated = [...prev];
-
         if (type === 'loaded') {
           updated.splice(index, 1);
         } else {
@@ -58,7 +67,6 @@ const useParseLog = (gamePath: string) => {
             updated.splice(index, 1);
           }
         }
-
         return updated;
       });
     },
@@ -81,11 +89,20 @@ const useParseLog = (gamePath: string) => {
     [removeLog]
   );
 
+  const removeOtherMods = useCallback(
+    async (index: number, skipped: ModEntry[]) => {
+      const paths = skipped.map(mod => mod.path);
+      await invoke('delete_mods', { paths });
+      removeLog(index, 'loaded');
+    },
+    [removeLog]
+  );
+
   return {
     parseLog,
-    removeLog,
     removeLoadedMod,
     removeSkippedMod,
+    removeOtherMods,
     results,
     error,
   };
@@ -95,9 +112,9 @@ function App() {
   const [gamePath, setGamePath] = useState('');
   const {
     parseLog,
-    removeLog,
     removeLoadedMod,
     removeSkippedMod,
+    removeOtherMods,
     results,
     error,
   } = useParseLog(gamePath);
@@ -124,7 +141,6 @@ function App() {
         </div>
         <div className='bg-neutral-800 p-2 text-sm'>
           {error && <div className='text-red-400'>{error}</div>}
-
           {results.length === 0 && !error && <div>No conflicts found.</div>}
 
           {results.map((conflict, idx) => (
@@ -147,10 +163,7 @@ function App() {
                       className='rounded border px-2 py-0.5 text-xs hover:bg-red-600'
                       onClick={async e => {
                         e.stopPropagation();
-                        await invoke('delete_mods', {
-                          paths: conflict.skipped.map(mod => mod.path),
-                        });
-                        removeLog(idx, 'loaded');
+                        await removeOtherMods(idx, conflict.skipped);
                       }}
                     >
                       Remove others
@@ -169,8 +182,18 @@ function App() {
                   <span className='text-neutral-500'>
                     {conflict.loaded.path}
                   </span>
-                  <span className='text-neutral-500'>{`${formatSize(conflict.loaded.size)}`}</span>
-                  <span className='text-neutral-500'>{`Create at: ${formatDate(conflict.loaded.created)}`}</span>
+                  <span
+                    className={
+                      isSizeDuplicate(conflict, conflict.loaded.size)
+                        ? 'text-red-400'
+                        : 'text-neutral-500'
+                    }
+                  >
+                    {formatSize(conflict.loaded.size)}
+                  </span>
+                  <span className='text-neutral-500'>
+                    {`Create at: ${formatDate(conflict.loaded.created)}`}
+                  </span>
                 </div>
               </div>
               <div className='space-y-2'>
@@ -197,8 +220,18 @@ function App() {
                         <span>{mod.name}</span>
                       </div>
                       <span className='text-neutral-500'>{mod.path}</span>
-                      <span className='text-neutral-500'>{`${formatSize(mod.size)}`}</span>
-                      <span className='text-neutral-500'>{`Create at: ${formatDate(mod.created)}`}</span>
+                      <span
+                        className={
+                          isSizeDuplicate(conflict, mod.size)
+                            ? 'text-red-400'
+                            : 'text-neutral-500'
+                        }
+                      >
+                        {formatSize(mod.size)}
+                      </span>
+                      <span className='text-neutral-500'>
+                        {`Create at: ${formatDate(mod.created)}`}
+                      </span>
                     </div>
                   ))}
                 </div>
