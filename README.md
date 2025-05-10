@@ -1,68 +1,54 @@
-# Koikatsu Mod Conflict Viewer
+# KK Log-Based Mod Conflict Manager
 
 A Tauri + React desktop tool for analyzing and managing mod conflicts detected from Koikatsu's `output_log.txt`.
 
-## ✨ Features
+## 基於 Tauri + React 製作的桌面工具，透過分析 Koikatsu 的 `output_log.txt`，協助你檢視與管理重複的模組衝突。
 
-- 🧠 **Parse Koikatsu mod conflict logs**
-- 📂 Show `Loaded` and `Skipped` mod versions
-- 🔍 Display mod metadata: file size, creation date
-- 🖱️ Double-click to open mod file
-- 🧹 Remove mods (individually or all skipped) to Recycle Bin
-- 🔄 Auto-update UI after deletion
+## 🧠 Motivation / 動機
 
----
+I made this tool to help me clean up and organize my Koikatsu mod collection. While [KKManager](https://github.com/IllusionMods/KKManager) offers a built-in "remove duplicated mods" function, I’m a mod hoarder and wanted more control over what gets removed.
 
-## 📦 Setup
-
-```bash
-# 1. Clone repo
-npm install
-
-# 2. Install Rust deps
-cargo add trash
-
-# 3. Run Tauri dev
-npm run tauri dev
-```
-
-Make sure you have:
-
-- `@tauri-apps/plugin-opener` in `package.json`
-- Plugin enabled in `tauri.conf.json`
-- Capabilities declared in `src-tauri/capabilities/default.json`:
-
-```json
-{
-  "permissions": [
-    {
-      "identifier": "opener:allow-open-path",
-      "allow": [{ "path": "C:/" }, { "path": "D:/" }]
-    }
-  ]
-}
-```
+這個小工具是我為了整理 Koikatsu 的模組寫的。雖然 [KKManager](https://github.com/IllusionMods/KKManager) 有內建移除重複模組功能，不過我是倉鼠人，想自己盤點收藏。
 
 ---
+
+## 📦 Install
+
+https://github.com/soapproject/koikatsu-log-based-mod-conflict-manager/releases
 
 ## 🧪 Usage
 
-1. 打開應用
-2. 貼上遊戲根目錄（如 `C:\Program Files (x86)\Steam\steamapps\common\Koikatsu`）
-3. 點擊 **Parse log**
-4. 透過介面：
-   - 雙擊 mod 路徑 → 用預設程式開啟
-   - 點 **Remove this** ➜ 移除該模組並更新畫面
-   - 點 **Remove others** ➜ 刪掉與該 mod 重複的版本
+## 🛠️ Dev / 開發環境建置
 
----
+### Prerequisites / 前置需求
 
-## 📁 Log 路徑搜尋順序
+- [Node.js](https://nodejs.org/)
+- [Rust](https://www.rust-lang.org/tools/install)
 
-此工具會自動在以下位置找 log：
+### Run dev / 本地運行
 
-- `Koikatsu/output_log.txt`
-- `Koikatsu/Koikatsu_Data/output_log.txt`
-- `Koikatsu/BepInEx/LogOutput.log`
+```bash
+# Install frontend dependencies
+# 安裝前端依賴
+npm install
 
----
+# Fetch Rust (Tauri) dependencies
+# 安裝 Rust 依賴
+cd src-tauri
+cargo fetch
+cd ..
+
+# Start Tauri in development mode
+# 啟動 Tauri 開發模式
+npm run tauri dev
+```
+
+To quickly trace the main logic:
+
+- Frontend logic is primarily located in [`src/App.tsx`](./src/App.tsx)
+- Backend (Rust) logic is primarily located in [`src-tauri/src/lib.rs`](./src-tauri/src/lib.rs)
+
+快速追蹤主要邏輯：
+
+- 前端 [`src/App.tsx`](./src/App.tsx)
+- 後端 [`src-tauri/src/lib.rs`](./src-tauri/src/lib.rs)
