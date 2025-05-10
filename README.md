@@ -18,6 +18,25 @@ https://github.com/soapproject/koikatsu-log-based-mod-conflict-manager/releases
 
 ## 🧪 Usage
 
+1. Input game path.  
+輸入遊戲路徑  
+
+2. Click Parse.  
+點擊解析按鈕  
+
+![image](https://github.com/user-attachments/assets/554d9a5a-8fe4-4691-aa43-88166de96137)  
+
+3. The program will try to parse `output_log.txt`.  
+程式會嘗試解析`output_log.txt`  
+
+![image](https://github.com/user-attachments/assets/6566805c-1a6c-43b4-9838-7c3fe29ad8c1)
+
+4. Double-click to open file, use the remove button to move the file to Recycle Bin.  
+雙擊可開啟檔案, 使用移除按鈕送到回收桶  
+
+![image](https://github.com/user-attachments/assets/42068476-085f-44d1-9cd0-f415ace93fd6)
+
+
 ## 🛠️ Dev / 開發環境建置
 
 ### Prerequisites / 前置需求
