@@ -36,6 +36,10 @@ https://github.com/soapproject/koikatsu-log-based-mod-conflict-manager/releases
 
 ![image](https://github.com/user-attachments/assets/42068476-085f-44d1-9cd0-f415ace93fd6)
 
+> ⚠️ **Warning / 注意**  
+> This tool does **not** write back to `output_log.txt`. To refresh the log content and see updated conflicts, **you must launch the game once** after making any changes.  
+>  
+> 本工具**不會寫回 `output_log.txt`**。若要更新衝突狀況，**請在修改完後重新啟動一次遊戲**以刷新 log 內容。
 
 ## 🛠️ Dev / 開發環境建置
 
