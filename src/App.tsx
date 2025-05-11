@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { openPath } from '@tauri-apps/plugin-opener';
 import { useCallback, useState } from 'react';
+import cn from './cn';
 import './globals.css';
 
 type ModEntry = {
@@ -32,6 +33,8 @@ const isSizeDuplicate = (conflict: ModConflict, size: number) => {
   ];
   return allSizes.filter(s => s === size).length > 1;
 };
+
+const isSideloader = (path: string) => path.includes('Sideloader');
 
 // Main Parser Logic
 const useParseLog = (gamePath: string) => {
@@ -179,15 +182,20 @@ function App() {
                     </button>
                     <span>{conflict.loaded.name}</span>
                   </div>
-                  <span className='text-neutral-500'>
+                  <span
+                    className={cn('text-neutral-500', {
+                      'text-cyan-900': isSideloader(conflict.loaded.path),
+                    })}
+                  >
                     {conflict.loaded.path}
                   </span>
                   <span
-                    className={
-                      isSizeDuplicate(conflict, conflict.loaded.size)
-                        ? 'text-red-400'
-                        : 'text-neutral-500'
-                    }
+                    className={cn('text-neutral-500', {
+                      'text-red-400': isSizeDuplicate(
+                        conflict,
+                        conflict.loaded.size
+                      ),
+                    })}
                   >
                     {formatSize(conflict.loaded.size)}
                   </span>
@@ -219,13 +227,17 @@ function App() {
                         </button>
                         <span>{mod.name}</span>
                       </div>
-                      <span className='text-neutral-500'>{mod.path}</span>
                       <span
-                        className={
-                          isSizeDuplicate(conflict, mod.size)
-                            ? 'text-red-400'
-                            : 'text-neutral-500'
-                        }
+                        className={cn('text-neutral-500', {
+                          'text-cyan-900': isSideloader(mod.path),
+                        })}
+                      >
+                        {mod.path}
+                      </span>
+                      <span
+                        className={cn('text-neutral-500', {
+                          'text-red-400': isSizeDuplicate(conflict, mod.size),
+                        })}
                       >
                         {formatSize(mod.size)}
                       </span>
