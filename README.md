@@ -18,6 +18,31 @@ https://github.com/soapproject/koikatsu-log-based-mod-conflict-manager/releases
 
 ## 🧪 Usage
 
+> ℹ️ **Info / 注意事項**  
+> This tool assumes that `output_log.txt` exists directly under your game directory and contains lines like:  
+>  
+> ```
+> [Warning:Sideloader] Multiple versions detected
+> ```  
+>  
+> If the program appears to do nothing after clicking "Parse", please make sure:  
+> 1. Your game path is correct  
+> 2. The log file (`output_log.txt`) exists and contains conflict warnings  
+>  
+> Feel free to open an issue or PR if you have ideas to improve this project!  
+>  
+> 本工具預設 `output_log.txt` 應位於遊戲資料夾根目錄，且內含以下類似內容：  
+>  
+> ```
+> [Warning:Sideloader] Multiple versions detected
+> ```  
+>  
+> 若點擊「解析」後程式沒有反應，請先確認：  
+> 1. 遊戲路徑是否正確  
+> 2. `output_log.txt` 是否存在，且有包含模組衝突的警告訊息  
+>  
+> 如果有任何優化建議，歡迎發 PR 或 issue！
+
 1. Input game path.  
 輸入遊戲路徑  
 
