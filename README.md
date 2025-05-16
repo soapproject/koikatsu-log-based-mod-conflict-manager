@@ -34,7 +34,7 @@ https://github.com/soapproject/koikatsu-log-based-mod-conflict-manager/releases
 4. Double-click to open file, use the remove button to move the file to Recycle Bin.  
 雙擊可開啟檔案, 使用移除按鈕送到回收桶  
 
-![image](https://github.com/user-attachments/assets/42068476-085f-44d1-9cd0-f415ace93fd6)
+![image](https://github.com/user-attachments/assets/772cdbd6-284b-40ee-80d5-255de7e69e69)
 
 > ⚠️ **Warning / 注意**  
 > This tool does **not** write back to `output_log.txt`. To refresh the log content and see updated conflicts, **you must launch the game once** after making any changes.  
