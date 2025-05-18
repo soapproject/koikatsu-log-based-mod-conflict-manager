@@ -3,7 +3,6 @@ use std::{
     io::Read,
     path::{Path, PathBuf},
     time::UNIX_EPOCH,
-    panic::{catch_unwind, AssertUnwindSafe},
 };
 
 use quick_xml::de::from_str;
