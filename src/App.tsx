@@ -344,7 +344,7 @@ function App() {
 
           {results.map((conflict, idx) => (
             <div
-              key={idx}
+              key={conflict.loaded.path}
               className='mb-3 space-y-1 border-b border-neutral-600 pb-2'
             >
               <div className='space-y-2'>
@@ -385,7 +385,7 @@ function App() {
                 <div className='flex flex-col gap-2'>
                   {conflict.skipped.map((mod, i) => (
                     <ModItem
-                      key={i}
+                      key={mod.path}
                       mod={mod}
                       index={i}
                       type='skipped'
