@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { produce } from 'immer';
 import cn from './cn';
 import './globals.css';
 
@@ -129,19 +130,19 @@ const useParseLog = (gamePath: string) => {
 
   const removeLog = useCallback(
     (index: number, type: 'loaded' | 'skipped', path?: string) => {
-      setResults(prev => {
-        const updated = [...prev];
-        if (type === 'loaded') {
-          updated.splice(index, 1);
-        } else {
-          const conflict = updated[index];
-          conflict.skipped = conflict.skipped.filter(mod => mod.path !== path);
-          if (conflict.skipped.length === 0) {
-            updated.splice(index, 1);
+      setResults(prev =>
+        produce(prev, draft => {
+          if (type === 'loaded') {
+            draft.splice(index, 1);
+          } else {
+            const conflict = draft[index];
+            conflict.skipped = conflict.skipped.filter(mod => mod.path !== path);
+            if (conflict.skipped.length === 0) {
+              draft.splice(index, 1);
+            }
           }
-        }
-        return updated;
-      });
+        })
+      );
     },
     []
   );
@@ -294,26 +295,16 @@ function App() {
       manifest: ManifestData,
       skippedIndex?: number
     ) => {
-      const updater = (prev: ModConflict[]) => {
-        const updated = [...prev];
-        const conflict = { ...updated[idx] };
-
-        if (type === 'loaded') {
-          conflict.loaded = { ...conflict.loaded, manifest };
-        } else if (typeof skippedIndex === 'number') {
-          const newSkipped = [...conflict.skipped];
-          newSkipped[skippedIndex] = {
-            ...newSkipped[skippedIndex],
-            manifest,
-          };
-          conflict.skipped = newSkipped;
-        }
-
-        updated[idx] = conflict;
-        return updated;
-      };
-
-      setResults(updater);
+      setResults(prev =>
+        produce(prev, draft => {
+          const conflict = draft[idx];
+          if (type === 'loaded') {
+            conflict.loaded.manifest = manifest;
+          } else if (typeof skippedIndex === 'number') {
+            conflict.skipped[skippedIndex].manifest = manifest;
+          }
+        })
+      );
     },
     [setResults]
   );
